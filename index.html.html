@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CubePunk</title>
+    <link rel="icon" type="image/png" href="img/favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f3ff;
+            --pink: #ff00ff;
+            --yellow: #fcee0a;
+            --dark-bg: #050508;
+            --card-bg: rgba(10, 10, 15, 0.98);
+            --pixel: 'Press Start 2P', cursive;
+            --cyber: 'Orbitron', sans-serif;
+            --body: 'Rajdhani', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: var(--body);
+            overflow-x: hidden;
+        }
+
+        /* EFECTO CRT */
+        body::after {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        /* NAV CON LOGO CENTRADO MATEMÁTICAMENTE */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; height: 90px;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            display: flex; justify-content: center;
+        }
+
+        .nav-inner {
+            width: 95%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+        }
+
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .links-left { justify-content: flex-start; }
+        .links-right { justify-content: flex-end; }
+
+        .nav-links a {
+            color: #fff; text-decoration: none; font-family: var(--cyber);
+            font-size: 10px; letter-spacing: 1px; transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+
+        .nav-logo-container { display: flex; justify-content: center; align-items: center; padding: 0 20px; }
+        .nav-logo-img { height: 50px; transition: 0.5s; }
+
+        /* PÁGINAS Y ANIMACIÓN */
+        .page-content {
+            display: none;
+            min-height: 100vh;
+            padding-top: 110px;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        .page-content.active-page { display: block; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        /* HERO CON IMAGEN LOCAL */
+        .hero-section {
+            position: relative;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* AQUÍ ESTÁ TU CAMBIO: REEMPLAZA 'fondo-hero.png' CON TU ARCHIVO */
+            background-image: linear-gradient(to bottom, rgba(5,5,8,0.3), var(--dark-bg)), 
+                              url('img/city.png'); 
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .hero-logo-main {
+            width: 85%;
+            max-width: 550px;
+            filter: drop-shadow(0 0 20px var(--cyan));
+            animation: float 4s infinite ease-in-out;
+        }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* TICKER */
+        .ticker {
+            background: var(--pink);
+            color: white; padding: 10px 0;
+            font-family: var(--pixel); font-size: 10px;
+            overflow: hidden; white-space: nowrap;
+            border-top: 2px solid #fff; border-bottom: 2px solid #fff;
+        }
+        .ticker-wrap { display: inline-block; animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* CARDS */
+        .faction-card {
+            background: #0a0a0f; border: 1px solid #222; padding: 30px;
+            position: relative; transition: 0.4s;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        }
+        .faction-card:hover { border-color: var(--cyan); transform: translateY(-10px); }
+
+        /* FORMULARIO BETA */
+        .beta-form {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid #111;
+            margin-top: 50px;
+        }
+        .beta-input {
+            background: #000; border: 1px solid var(--cyan);
+            padding: 15px; color: #fff; font-family: var(--cyber);
+            width: 100%; max-width: 300px; outline: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .nav-inner { grid-template-columns: 1fr; justify-items: center; padding: 10px 0; }
+            nav { height: auto; position: sticky; }
+            .nav-logo-container { order: -1; }
+            .links-left, .links-right { justify-content: center; margin: 10px 0; }
+        }
+
+        .container { max-width: 1200px; margin: auto; padding: 0 20px; }
+        .btn-cta {
+            background: var(--pink); color: #fff; padding: 15px 30px;
+            font-family: var(--cyber); font-weight: 900; border: none;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-cta:hover { background: var(--cyan); color: #000; }
+        .sec-title { font-family: var(--cyber); font-size: 2.5rem; color: var(--cyan); margin-bottom: 40px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <div class="nav-links links-left">
+                <a href="javascript:void(0)" onclick="showPage('home')" id="link-home" class="active">Home</a>
+                <a href="javascript:void(0)" onclick="showPage('thegame')" id="link-thegame">The Game</a>
+                <a href="javascript:void(0)" onclick="showPage('media')" id="link-media">Media</a>
+            </div>
+            <div class="nav-logo-container">
+                <a href="javascript:void(0)" onclick="showPage('home')">
+                    <img src="img/CU.png" alt="CubePunk" class="nav-logo-img">
+                </a>
+            </div>
+            <div class="nav-links links-right">
+                <a href="javascript:void(0)" onclick="showPage('community')" id="link-community">Community</a>
+                <a href="javascript:void(0)" onclick="showPage('blog')" id="link-blog">Blog</a>
+                <a href="javascript:void(0)" onclick="showPage('download')" id="link-download">Download</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="home" class="page-content active-page">
+        <header class="hero-section">
+            <img src="img/logo.png" alt="CubePunk Logo" class="hero-logo-main">
+            <div style="z-index: 2; margin-top: 20px;">
+                <p style="font-family: var(--pixel); color: var(--yellow); font-size: 11px;">[ CONECTANDO AL SERVIDOR PRINCIPAL... ]</p>
+                <div style="margin-top: 30px;">
+                    <button class="btn-cta">JOIN THE ALPHA</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="ticker">
+            <div class="ticker-wrap">
+                // SISTEMA ACTUALIZADO // NUEVOS NODOS DISPONIBLES // ERROR 404: HUMANITY NOT FOUND // SIGUE EL CONEJO BLANCO DE PIXEL //
+            </div>
+        </div>
+
+        <div class="container" style="margin-top: 80px;">
+            <h2 class="sec-title" style="text-align: center;">CARACTERÍSTICAS</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <div class="faction-card">
+                    <h3 style="color: var(--cyan); margin-bottom: 10px;">MUNDO VIVO</h3>
+                    <p style="color: #666;">Cada acción cambia el código del servidor en tiempo real.</p>
+                </div>
+                <div class="faction-card">
+                    <h3 style="color: var(--pink); margin-bottom: 10px;">HACKING REAL</h3>
+                    <p style="color: #666;">No es solo apretar un botón, es entender el flujo de datos.</p>
+                </div>
+                <div class="faction-card">
+                    <h3 style="color: var(--yellow); margin-bottom: 10px;">EVOLUCIÓN</h3>
+                    <p style="color: #666;">Mejora tu núcleo con piezas de hardware recuperadas.</p>
+                </div>
+            </div>
+        </div>
+
+        <section class="beta-form">
+            <div class="container">
+                <h2 style="font-family: var(--pixel); font-size: 14px; color: var(--pink); margin-bottom: 20px;">¿QUIERES SER UN BETA TESTER?</h2>
+                <p style="margin-bottom: 30px; color: #888;">Introduce tu email para recibir una invitación cuando abramos nuevos nodos.</p>
+                <form onsubmit="event.preventDefault(); alert('Inscrito en la base de datos de CubePunk.');">
+                    <input type="email" class="beta-input" placeholder="TU_EMAIL@GRID.COM" required>
+                    <button class="btn-cta" style="margin-top: 10px;">ENVIAR DATOS</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <main id="thegame" class="page-content"><div class="container"><h2 class="sec-title">THE GAME</h2><p>Contenido en desarrollo...</p></div></main>
+    <main id="media" class="page-content"><div class="container"><h2 class="sec-title">MEDIA</h2></div></main>
+    <main id="community" class="page-content"><div class="container"><h2 class="sec-title">COMMUNITY</h2></div></main>
+    <main id="blog" class="page-content"><div class="container"><h2 class="sec-title">BLOG</h2></div></main>
+    <main id="download" class="page-content"><div class="container"><h2 class="sec-title">DOWNLOAD</h2></div></main>
+
+    <footer style="padding: 40px; text-align: center; border-top: 1px solid #111; color: #444; font-size: 10px;">
+        © 2026 GHOSTY AND CubePunk STUDIOS
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
+            const target = document.getElementById(pageId);
+            if(target) {
+                target.classList.add('active-page');
+                window.scrollTo(0, 0);
+            }
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            const activeLink = document.getElementById('link-' + pageId);
+            if(activeLink) activeLink.classList.add('active');
+        }
+    </script>
+</body>
+</html>
